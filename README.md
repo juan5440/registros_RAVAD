@@ -16,8 +16,8 @@ Para comenzar a utilizar el sistema, consulta los siguientes documentos:
 - **Registro General de Movimientos**: Control total de ingresos y egresos con soporte para adjuntar fotos de facturas.
 - **Módulo Pro-Luz**: Gestión especializada de aportaciones mensuales con seguimiento histórico y sincronización automática.
 - **Reportes y Exportación**: Genera reportes detallados en formatos Excel y PDF listos para imprimir o compartir.
-- **Modo Offline**: El sistema funciona al 100% sin necesidad de conexión a internet.
-- **Interfaz Premium**: Diseño visual de alta gama con soporte para Modo Oscuro y alertas profesionales (SweetAlert2).
+- **Acceso Seguro y Gestión de Usuarios**: Sistema de login protegido con encriptación y un módulo para administrar cuentas de usuario.
+- **Interfaz Premium Ultra-Slim**: Diseño moderno con barra de navegación optimizada, soporte para Modo Oscuro y alertas profesionales (SweetAlert2).
 
 ## 🛠 Tecnologías
 

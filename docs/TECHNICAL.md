@@ -50,7 +50,25 @@ Registros individuales de aportaciones mensuales.
 - `monto`: Decimal.
 - `mes_correspondiente` / `anio_correspondiente`: Int.
 
-## 3. Gestión de Activos (Modo Offline)
+### Tabla: `usuarios`
+
+Control de acceso al sistema.
+
+- `id`: Int PK.
+- `username`: String (Único).
+- `password`: String (Hash seguro).
+- `nombre_completo`: String.
+- `ultimo_acceso`: Datetime.
+
+## 3. Seguridad y Sesiones
+
+El sistema implementa una capa de seguridad basada en sesiones nativas de PHP:
+
+- **Middleware**: El archivo `includes/auth_check.php` se incluye en todas las cabeceras para validar que el usuario tenga una sesión activa.
+- **Protección de Handlers**: Los scripts que procesan datos (subida de archivos, guardado) tienen validaciones internas para evitar acceso directo malintencionado.
+- **Contraseñas**: Se utiliza la función `password_hash()` con el algoritmo por defecto de PHP para el almacenamiento seguro.
+
+## 4. Gestión de Activos (Modo Offline)
 
 Todas las librerías externas se encuentran en `public/vendor/`. No se deben añadir scripts de CDNs externos para mantener la compatibilidad offline.
 
@@ -59,7 +77,7 @@ Todas las librerías externas se encuentran en `public/vendor/`. No se deben añ
 - **SweetAlert2**: Gestor de diálogos y notificaciones.
 - **SheetJS / jsPDF**: Procesamiento de documentos en el lado del cliente.
 
-## 4. Mejores Prácticas implementadas
+## 5. Mejores Prácticas implementadas
 
 - **Baja Lógica**: En lugar de eliminar personas, se utiliza la columna `activo` para preservar el historial de reportes.
 - **Sanitización**: Uso de sentencias preparadas (PDO) para toda la interacción con la base de datos.

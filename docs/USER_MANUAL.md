@@ -2,7 +2,17 @@
 
 Este manual te ayudará a comprender cómo navegar y utilizar todas las funciones del sistema **RAVAD Ledger**.
 
-## 1. Dashboard Principal
+## 1. Acceso y Seguridad
+
+El sistema está protegido para garantizar la privacidad de tus datos.
+
+- **Inicio de Sesión**: Ingresa tu usuario y contraseña en la pantalla principal.
+- **Cierre de Sesión**: Usa el menú desplegable en la esquina superior derecha (donde aparece tu nombre) para salir del sistema de forma segura.
+- **Gestión de Usuarios**: Accede al módulo **Usuarios** en la barra lateral para crear nuevas cuentas o cambiar contraseñas.
+
+## 2. Dashboard Principal (Tablero de Control)
+
+Es la pantalla de inicio optimizada para una visión rápida:
 
 Es la pantalla de inicio del sistema. Aquí puedes ver:
 
