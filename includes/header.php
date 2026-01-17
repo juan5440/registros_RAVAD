@@ -4,6 +4,7 @@ $current_path = $_SERVER['PHP_SELF'];
 $is_subfolder = strpos($current_path, '/modules/') !== false;
 $is_pro_luz = strpos($current_path, '/pro_luz/') !== false;
 $is_report = strpos($current_path, '/reportes/') !== false;
+$is_usuarios = strpos($current_path, '/usuarios/') !== false;
 $is_dashboard = strpos($current_path, '/dashboard/') !== false;
 $root = $is_subfolder ? '../../' : './';
 require_once $root . 'includes/auth_check.php';
@@ -18,8 +19,46 @@ require_once $root . 'includes/auth_check.php';
     <link href="<?= $root ?>public/vendor/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?= $root ?>public/vendor/css/all.min.css">
+    <!-- DataTables CSS -->
+    <link href="<?= $root ?>public/vendor/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <!-- Theme Styles -->
     <link rel="stylesheet" href="<?= $root ?>public/css/style.css">
+    
+    <style>
+        /* DataTables Custom Styles for Premium Look */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            padding: 5px 15px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-main);
+        }
+        [data-theme="dark"] .dataTables_wrapper .dataTables_length select,
+        [data-theme="dark"] .dataTables_wrapper .dataTables_filter input {
+            background-color: var(--bg-light);
+            border-color: var(--border-color);
+            color: var(--text-main);
+        }
+        [data-theme="dark"] .page-link {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-main);
+        }
+        [data-theme="dark"] .page-item.disabled .page-link {
+            background-color: var(--bg-light);
+            border-color: var(--border-color);
+            opacity: 0.5;
+        }
+        .dataTables_info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
     <!-- Chart.js -->
     <script src="<?= $root ?>public/vendor/js/chart.js"></script>
     <!-- SweetAlert2 -->
@@ -56,10 +95,10 @@ require_once $root . 'includes/auth_check.php';
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-light py-1 px-4 shadow-sm">
                 <div class="container-fluid p-0">
-                    <button class="btn btn-outline-secondary me-3 d-lg-none" id="sidebarToggle">
+                    <button class="btn btn-outline-secondary me-2" id="sidebarToggle">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h5 class="m-0 flex-grow-1 fw-bold" id="module-title" style="color: var(--text-main);">Módulo</h5>
+                    <h5 class="m-0 flex-grow-1 fw-bold text-truncate" id="module-title" style="color: var(--text-main); font-size: 1.1rem;">Módulo</h5>
                     
                     <div class="d-flex align-items-center">
                         <!-- User Info -->
@@ -82,8 +121,8 @@ require_once $root . 'includes/auth_check.php';
                             <a href="<?= $root ?>modules/reportes/aportaciones_anual.php" class="btn btn-primary">
                                 <i class="fas fa-chart-bar me-2"></i> Reporte Anual
                             </a>
-                        <?php elseif ($is_report || $is_dashboard): ?>
-                            <!-- No extra button for reports or dashboard -->
+                        <?php elseif ($is_report || $is_dashboard || $is_usuarios): ?>
+                            <!-- No extra button for reports, dashboard, or users module -->
                         <?php else: ?>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRecordModal">
                                 <i class="fas fa-plus me-2"></i> Nuevo Registro

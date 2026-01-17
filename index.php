@@ -64,7 +64,7 @@ include 'includes/header.php';
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 datatable">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">Fecha</th>
@@ -106,59 +106,17 @@ include 'includes/header.php';
                                                 </button>
                                             <?php endif; ?>
                                         <?php endif; ?>
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editRecordModal<?= $row['id'] ?>" title="Editar Registro">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" title="Eliminar Registro"
+                                                onclick="swalConfirm('¿Eliminar registro?', 'Esta acción borrará permanentemente el movimiento de la base de datos. ¿Deseas continuar?', 'warning', () => { window.location.href = 'modules/general/delete.php?id=<?= $row['id'] ?>&month=<?= $month ?>&year=<?= $year ?>'; })">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
 
-                            <!-- Modal para Subir Factura -->
-                            <?php if (!empty($row['factura']) && !$row['foto_factura']): ?>
-                            <div class="modal fade" id="uploadFactura<?= $row['id'] ?>" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form action="modules/general/upload_factura.php" method="POST" enctype="multipart/form-data">
-                                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Subir Foto de Factura: <?= htmlspecialchars($row['factura']) ?></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Seleccionar Imagen (JPG, PNG, WebP)</label>
-                                                    <input type="file" name="foto" class="form-control" accept="image/*" required>
-                                                </div>
-                                                <p class="text-muted small">Carga una foto clara de la factura física para respaldo digital.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-warning w-100">Subir Imagen</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-
-                            <!-- Modal para Ver Factura -->
-                            <?php if ($row['foto_factura']): ?>
-                            <div class="modal fade" id="viewFactura<?= $row['id'] ?>" tabindex="-1">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Factura: <?= htmlspecialchars($row['factura']) ?></h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body text-center p-0">
-                                            <img src="public/uploads/facturas/<?= $row['foto_factura'] ?>" class="img-fluid rounded-bottom" alt="Factura">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a href="public/uploads/facturas/<?= $row['foto_factura'] ?>" target="_blank" class="btn btn-info"><i class="fas fa-external-link-alt me-2"></i>Ver pantalla completa</a>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
@@ -166,6 +124,107 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<!-- All Modals (Outside table to avoid DataTables conflicts) -->
+<?php foreach ($movimientos as $row): ?>
+    <!-- Modal para Subir Factura -->
+    <?php if (!empty($row['factura']) && !$row['foto_factura']): ?>
+    <div class="modal fade" id="uploadFactura<?= $row['id'] ?>" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="modules/general/upload_factura.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Subir Foto de Factura: <?= htmlspecialchars($row['factura']) ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Seleccionar Imagen (JPG, PNG, WebP)</label>
+                            <input type="file" name="foto" class="form-control" accept="image/*" required>
+                        </div>
+                        <p class="text-muted small">Carga una foto clara de la factura física para respaldo digital.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-warning w-100">Subir Imagen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Modal para Ver Factura -->
+    <?php if ($row['foto_factura']): ?>
+    <div class="modal fade" id="viewFactura<?= $row['id'] ?>" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Factura: <?= htmlspecialchars($row['factura']) ?></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img src="public/uploads/facturas/<?= $row['foto_factura'] ?>" class="img-fluid rounded-bottom" alt="Factura">
+                </div>
+                <div class="modal-footer">
+                    <a href="public/uploads/facturas/<?= $row['foto_factura'] ?>" target="_blank" class="btn btn-info"><i class="fas fa-external-link-alt me-2"></i>Ver pantalla completa</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Modal para Editar Registro -->
+    <div class="modal fade" id="editRecordModal<?= $row['id'] ?>" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content text-start">
+                <form action="modules/general/update.php" method="POST">
+                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    <input type="hidden" name="month_redirect" value="<?= $month ?>">
+                    <input type="hidden" name="year_redirect" value="<?= $year ?>">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Registro</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" name="fecha" class="form-control" value="<?= $row['fecha'] ?>" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Factura #</label>
+                                <input type="text" name="factura" class="form-control" value="<?= htmlspecialchars($row['factura']) ?>">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Detalle / Concepto</label>
+                            <input type="text" name="detalle" class="form-control" value="<?= htmlspecialchars($row['detalle']) ?>" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ingreso (Debe)</label>
+                                <input type="number" step="0.01" name="debe" class="form-control" value="<?= $row['debe'] ?>">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Egreso (Haber)</label>
+                                <input type="number" step="0.01" name="haber" class="form-control" value="<?= $row['haber'] ?>">
+                            </div>
+                        </div>
+                        <div class="alert alert-info py-2" style="font-size: 0.85rem;">
+                            <i class="fas fa-info-circle me-1"></i> El saldo se recalcula automáticamente.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
 
 <!-- Modal para Nuevo Registro -->
 <div class="modal fade" id="addRecordModal" tabindex="-1" aria-hidden="true">

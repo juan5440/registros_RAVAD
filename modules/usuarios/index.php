@@ -19,7 +19,7 @@ include '../../includes/header.php';
 <div class="card glass-card border-0 shadow-sm">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 datatable table-striped">
                 <thead style="background-color: var(--border-color); color: var(--text-main);">
                     <tr>
                         <th class="ps-4">Usuario</th>
@@ -55,44 +55,47 @@ include '../../includes/header.php';
                         </td>
                     </tr>
 
-                    <!-- Edit User Modal -->
-                    <div class="modal fade" id="editUserModal<?= $u['id'] ?>" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content border-0 shadow-lg rounded-4">
-                                <div class="modal-header border-bottom-0 pb-0">
-                                    <h5 class="modal-title fw-bold">Editar Usuario</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <form action="save_user.php" method="POST">
-                                    <div class="modal-body p-4">
-                                        <input type="hidden" name="id" value="<?= $u['id'] ?>">
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Nombre Completo</label>
-                                            <input type="text" name="nombre_completo" class="form-control" value="<?= htmlspecialchars($u['nombre_completo']) ?>" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Usuario</label>
-                                            <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($u['username']) ?>" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Nueva Contraseña (dejar en blanco para no cambiar)</label>
-                                            <input type="password" name="password" class="form-control" autocomplete="new-password">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer border-top-0 pt-0">
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<!-- Edit User Modals (Outside table to avoid DOM issues) -->
+<?php foreach ($usuarios as $u): ?>
+<div class="modal fade" id="editUserModal<?= $u['id'] ?>" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 text-start">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="save_user.php" method="POST">
+                <div class="modal-body p-4">
+                    <input type="hidden" name="id" value="<?= $u['id'] ?>">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Nombre Completo</label>
+                        <input type="text" name="nombre_completo" class="form-control" value="<?= htmlspecialchars($u['nombre_completo']) ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Usuario</label>
+                        <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($u['username']) ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+                        <input type="password" name="password" class="form-control" autocomplete="new-password">
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endforeach; ?>
 
 <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1">

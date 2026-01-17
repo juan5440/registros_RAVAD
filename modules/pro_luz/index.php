@@ -15,6 +15,7 @@ $stmt = $db->prepare("
         pl.monto, 
         pl.fecha, 
         pl.procesado,
+        pl.id as payment_id,
         (SELECT SUM(monto) FROM pro_luz WHERE persona_id = p.id) as total_historico
     FROM personas p
     LEFT JOIN pro_luz pl ON p.id = pl.persona_id 
@@ -92,7 +93,7 @@ include '../../includes/header.php';
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 datatable table-striped">
                 <thead class="table-light">
                     <tr>
                         <th class="text-center">Nro.</th>
@@ -139,7 +140,10 @@ include '../../includes/header.php';
                                             <i class="fas fa-check me-1"></i> Registrar
                                         </button>
                                     <?php elseif(!$row['procesado']): ?>
-                                        <button class="btn btn-sm btn-outline-danger" title="Anular Registro (No implementado)"><i class="fas fa-undo"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="Anular Registro" 
+                                                onclick="swalConfirm('¿Anular registro?', 'Esta acción eliminará el registro de pago de este mes para <?= htmlspecialchars($row['nombre']) ?>. ¿Deseas continuar?', 'warning', () => { window.location.href = 'void_payment.php?id=<?= $row['payment_id'] ?>&month=<?= $month ?>&year=<?= $year ?>'; })">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </td>

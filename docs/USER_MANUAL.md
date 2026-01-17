@@ -10,17 +10,17 @@ El sistema está protegido para garantizar la privacidad de tus datos.
 - **Cierre de Sesión**: Usa el menú desplegable en la esquina superior derecha (donde aparece tu nombre) para salir del sistema de forma segura.
 - **Gestión de Usuarios**: Accede al módulo **Usuarios** en la barra lateral para crear nuevas cuentas o cambiar contraseñas.
 
-## 2. Dashboard Principal (Tablero de Control)
-
-Es la pantalla de inicio optimizada para una visión rápida:
-
-Es la pantalla de inicio del sistema. Aquí puedes ver:
-
-- **Tendencias**: Gráfica de ingresos vs egresos anuales.
-- **KPIs**: Resumen de saldos totales y estado de aportaciones Pro-Luz del mes actual.
 - **Actividad Reciente**: Los últimos 5 movimientos registrados.
 
-## 2. Registro General (Libro Mayor)
+## 3. Tablas Interactivas (DataTables)
+
+Todas las tablas principales del sistema ahora son interactivas:
+
+- **Buscador**: Escribe cualquier texto en el cuadro superior derecho de la tabla para filtrar resultados al instante.
+- **Paginación**: Navega entre grupos de 10, 25 o más registros usando los botones al pie de la tabla.
+- **Ordenamiento**: Haz clic en los encabezados de las columnas (ej. "Persona", "Monto") para ordenar la información de mayor a menor o viceversa.
+
+## 4. Registro General (Libro Mayor)
 
 Para gestionar tus finanzas diarias:
 
@@ -30,7 +30,7 @@ Para gestionar tus finanzas diarias:
   - Haz clic en el icono de la **cámara** para subir una foto de la factura recibida.
   - Haz clic en el icono de la **imagen** para ver la factura ya cargada.
 
-## 3. Módulo Pro-Luz
+## 5. Módulo Pro-Luz
 
 Gestión específica de aportaciones:
 
@@ -38,7 +38,7 @@ Gestión específica de aportaciones:
 - **Sincronización**: Cuando termines de recaudar el mes, usa el botón **Sincronizar** para pasar el total recaudado al Registro General automáticamente.
 - **Administrar Personas**: Accede a esta vista para agregar nuevas personas o desactivar las que ya no aportan (esto no borra su historial).
 
-## 4. Reportes y Exportación
+## 6. Reportes y Exportación
 
 El sistema cuenta con tres tipos de reportes avanzados:
 

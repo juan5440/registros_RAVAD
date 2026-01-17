@@ -73,6 +73,8 @@ El sistema implementa una capa de seguridad basada en sesiones nativas de PHP:
 Todas las librerías externas se encuentran en `public/vendor/`. No se deben añadir scripts de CDNs externos para mantener la compatibilidad offline.
 
 - **Bootstrap 5**: Estructura y componentes.
+- **jQuery 3.7.1**: Dependencia base para componentes interactivos.
+- **DataTables.js**: Motor de tablas con búsqueda, paginación y ordenamiento.
 - **Chart.js**: Renderizado de Canvas para el Dashboard.
 - **SweetAlert2**: Gestor de diálogos y notificaciones.
 - **SheetJS / jsPDF**: Procesamiento de documentos en el lado del cliente.

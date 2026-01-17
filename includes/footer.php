@@ -10,11 +10,31 @@ $root = $is_subfolder ? '../../' : './';
     </div>
     <!-- /#wrapper -->
 
-    <!-- Bootstrap 5 Bundle with Popper -->
+    <!-- Core Dependencies -->
+    <script src="<?= $root ?>public/vendor/js/jquery.min.js"></script>
     <script src="<?= $root ?>public/vendor/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables -->
+    <script src="<?= $root ?>public/vendor/js/jquery.dataTables.min.js"></script>
+    <script src="<?= $root ?>public/vendor/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Plugins -->
+    <script src="<?= $root ?>public/vendor/js/sweetalert2.all.min.js"></script>
     <script src="<?= $root ?>public/js/main.js"></script>
 
     <script>
+    // DataTable Default Configuration
+    $(document).ready(function() {
+        if ($.fn.DataTable) {
+            $('.datatable').DataTable({
+                language: {
+                    url: '<?= $root ?>public/vendor/js/es-ES.json' // I'll create this or use a local object
+                },
+                pageLength: 10,
+                responsive: true,
+                order: [] // Disable initial sort to keep SQL order
+            });
+        }
+    });
+
     // Professional Alert System (SweetAlert2)
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);

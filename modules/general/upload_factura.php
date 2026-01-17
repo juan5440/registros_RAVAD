@@ -31,10 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['foto']) && isset($_PO
     
     if (move_uploaded_file($file['tmp_name'], $target)) {
         $db = getDBConnection();
+        
+        // Fetch old filename to delete it
+        $stmt = $db->prepare("SELECT foto_factura FROM movimientos WHERE id = ?");
+        $stmt->execute([$id]);
+        $old_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($old_row && !empty($old_row['foto_factura'])) {
+            $old_file = $upload_dir . $old_row['foto_factura'];
+            if (file_exists($old_file)) {
+                unlink($old_file);
+            }
+        }
+
         $stmt = $db->prepare("UPDATE movimientos SET foto_factura = ? WHERE id = ?");
         $stmt->execute([$new_name, $id]);
         
-        header("Location: ../../index.php?success=Factura subida correctamente");
+        header("Location: ../../index.php?success=Factura subida y archivo anterior reemplazado");
     } else {
         header("Location: ../../index.php?error=Error al subir el archivo");
     }
