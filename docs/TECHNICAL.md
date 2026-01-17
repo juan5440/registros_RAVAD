@@ -1,0 +1,66 @@
+# 💻 Documentación Técnica
+
+Esta sección detalla la arquitectura, base de datos y estructura interna del sistema **RAVAD Ledger**.
+
+## 1. Arquitectura del Sistema
+
+El sistema sigue una arquitectura modular sencilla basada en PHP nativo:
+
+- **Root**: Contiene los puntos de entrada principales (`index.php`, `README.md`).
+- **config/**: Configuración de la base de datos (`db.php`).
+- **includes/**: Componentes reutilizables de UI (`header.php`, `footer.php`) y lógica global (`functions.php`).
+- **modules/**: Lógica de negocio dividida en:
+  - `dashboard/`: Visualizaciones y KPIs.
+  - `pro_luz/`: Gestión de aportaciones y personas.
+  - `reportes/`: Generación de reportes y exportación.
+  - `general/`: Utilidades como la subida de facturas.
+- **public/**: Activos estáticos (CSS, JS, Imágenes y Librerías Vendor).
+
+## 2. Base de Datos (MySQL)
+
+### Tabla: `movimientos`
+
+Almacena todos los registros financieros generales.
+
+- `id`: Int PK.
+- `fecha`: Date.
+- `factura`: String (opcional).
+- `detalle`: Text.
+- `debe`: Decimal (Ingresos).
+- `haber`: Decimal (Egresos).
+- `saldo`: Decimal (Calculado).
+- `foto_factura`: String (Nombre del archivo de imagen).
+- `es_pro_luz`: Boolean (Marca si viene del módulo Pro-Luz).
+
+### Tabla: `personas`
+
+Gestión de contribuyentes del módulo Pro-Luz.
+
+- `id`: Int PK.
+- `nombre`: String.
+- `activo`: Boolean (Baja lógica).
+- `total_historico`: Decimal (Suma acumulada de todas sus contribuciones).
+
+### Tabla: `pro_luz`
+
+Registros individuales de aportaciones mensuales.
+
+- `id`: Int PK.
+- `persona_id`: FK -> personas.
+- `monto`: Decimal.
+- `mes_correspondiente` / `anio_correspondiente`: Int.
+
+## 3. Gestión de Activos (Modo Offline)
+
+Todas las librerías externas se encuentran en `public/vendor/`. No se deben añadir scripts de CDNs externos para mantener la compatibilidad offline.
+
+- **Bootstrap 5**: Estructura y componentes.
+- **Chart.js**: Renderizado de Canvas para el Dashboard.
+- **SweetAlert2**: Gestor de diálogos y notificaciones.
+- **SheetJS / jsPDF**: Procesamiento de documentos en el lado del cliente.
+
+## 4. Mejores Prácticas implementadas
+
+- **Baja Lógica**: En lugar de eliminar personas, se utiliza la columna `activo` para preservar el historial de reportes.
+- **Sanitización**: Uso de sentencias preparadas (PDO) para toda la interacción con la base de datos.
+- **Responsividad**: Diseño móvil-primero utilizando el sistema de rejilla de Bootstrap 5.

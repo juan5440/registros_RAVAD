@@ -1,0 +1,15 @@
+# System Files
+.DS_Store
+Thumbs.db
+
+# Project Uploads (Keeping directory structure)
+public/uploads/facturas/*
+!public/uploads/facturas/.gitkeep
+
+# Local Configuration (Optional, if you want to keep db.php out of GitHub)
+# config/db.php
+
+# Environment and Tooling
+.vscode/
+.idea/
+.gemini/
