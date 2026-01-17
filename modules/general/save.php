@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_insert->execute([$fecha, $factura, $detalle, $debe, $haber, $new_saldo]);
 
         $db->commit();
-        header("Location: /index.php?success=1");
+        header("Location: ../../index.php?success=" . urlencode("Registro guardado exitosamente"));
     } catch (Exception $e) {
         $db->rollBack();
         die("Error: " . $e->getMessage());
