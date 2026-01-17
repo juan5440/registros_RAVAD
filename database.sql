@@ -37,3 +37,19 @@ CREATE TABLE IF NOT EXISTS pro_luz (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (persona_id) REFERENCES personas(id)
 );
+
+-- Users Table
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    nombre_completo VARCHAR(100) NOT NULL,
+    ultimo_acceso DATETIME DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Default User (Username: admin / Password: admin)
+-- The password is 'admin' hashed with PASSWORD_DEFAULT
+INSERT INTO usuarios (username, password, nombre_completo) 
+SELECT 'admin', '$2y$10$mC7pW0pY/B6v/F.z982OJuL.Zp0I5M6o0l.pS.1rR.Gj3i8.v.52', 'Administrador'
+WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE username = 'admin');
