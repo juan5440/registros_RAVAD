@@ -6,6 +6,7 @@ $is_pro_luz = strpos($current_path, '/pro_luz/') !== false;
 $is_report = strpos($current_path, '/reportes/') !== false;
 $is_dashboard = strpos($current_path, '/dashboard/') !== false;
 $root = $is_subfolder ? '../../' : './';
+require_once $root . 'includes/auth_check.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -28,7 +29,7 @@ $root = $is_subfolder ? '../../' : './';
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-dark text-white" id="sidebar-wrapper">
-            <div class="sidebar-heading border-bottom border-secondary p-3">
+            <div class="sidebar-heading border-bottom border-secondary p-2">
                 <i class="fas fa-book-open me-2"></i> RAVAD Ledger
             </div>
             <div class="list-group list-group-flush mt-3">
@@ -44,20 +45,36 @@ $root = $is_subfolder ? '../../' : './';
                 <a href="<?= $root ?>modules/reportes/index.php" class="list-group-item list-group-item-action <?= strpos($current_path, '/reportes/') !== false ? 'active' : '' ?>">
                     <i class="fas fa-file-contract"></i> Reportes
                 </a>
+                <a href="<?= $root ?>modules/usuarios/index.php" class="list-group-item list-group-item-action <?= strpos($current_path, '/usuarios/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-users-gear"></i> Usuarios
+                </a>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-light py-3 px-4">
+            <nav class="navbar navbar-expand-lg navbar-light py-1 px-4 shadow-sm">
                 <div class="container-fluid p-0">
                     <button class="btn btn-outline-secondary me-3 d-lg-none" id="sidebarToggle">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h4 class="m-0 flex-grow-1" id="module-title">Módulo</h4>
+                    <h5 class="m-0 flex-grow-1 fw-bold" id="module-title" style="color: var(--text-main);">Módulo</h5>
                     
                     <div class="d-flex align-items-center">
+                        <!-- User Info -->
+                        <div class="dropdown me-3">
+                            <a class="btn btn-link text-decoration-none dropdown-toggle p-0 d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; font-size: 0.75rem;">
+                                    <?= strtoupper(substr($_SESSION['nombre_completo'] ?? 'U', 0, 1)) ?>
+                                </div>
+                                <span class="d-none d-md-inline small fw-medium" style="color: var(--text-main); font-size: 0.85rem;"><?= htmlspecialchars($_SESSION['nombre_completo'] ?? 'Usuario') ?></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+                                <li><a class="dropdown-item py-2 text-danger" href="<?= $root ?>auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión</a></li>
+                            </ul>
+                        </div>
+
                         <div class="theme-toggle me-3" id="theme-toggle">
                             <i class="fas fa-moon" id="theme-icon"></i>
                         </div>
@@ -76,7 +93,7 @@ $root = $is_subfolder ? '../../' : './';
                 </div>
             </nav>
 
-            <div class="container-fluid p-4">
+            <div class="container-fluid p-2">
 
 <script>
     // Theme logic

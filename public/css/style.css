@@ -25,6 +25,19 @@
     --glass-border: rgba(255, 255, 255, 0.05);
 }
 
+/* Dark Mode Utilities Fix */
+[data-theme="dark"] .bg-light {
+    background-color: var(--border-color) !important;
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] .text-dark {
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] .table thead {
+    background-color: var(--border-color);
+    color: var(--text-main);
+}
+
 .text-primary {
     color: var(--primary-color) !important;
 }

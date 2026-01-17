@@ -1,4 +1,6 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) { exit('Acceso denegado'); }
 require_once '../../config/db.php';
 
 if (isset($_GET['id']) && isset($_GET['status'])) {
