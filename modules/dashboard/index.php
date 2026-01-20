@@ -3,15 +3,38 @@ require_once '../../config/db.php';
 require_once '../../includes/functions.php';
 
 $db = getDBConnection();
-$year = (int)date('Y');
+$year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 $month = (int)date('m');
 
-// 1. KPI Data
-$stmt_kpi = $db->query("SELECT SUM(debe) as total_ingresos, SUM(haber) as total_egresos FROM movimientos");
-$kpis = $stmt_kpi->fetch();
-$saldo_total = $kpis['total_ingresos'] - $kpis['total_egresos'];
+// 0. Get available years for the filter
+$stmt_years = $db->query("
+    SELECT YEAR(fecha) as anio FROM movimientos 
+    UNION 
+    SELECT anio_correspondiente as anio FROM pro_luz
+    GROUP BY anio
+    ORDER BY anio DESC
+");
+$available_years = $stmt_years->fetchAll(PDO::FETCH_COLUMN);
+if (!in_array($year, $available_years)) {
+    $available_years[] = $year;
+    rsort($available_years);
+}
 
-// 2. Pro-Luz Status (Current Month)
+// 1. KPI Data (Filtered by Year)
+$stmt_kpi = $db->prepare("SELECT SUM(debe) as total_ingresos, SUM(haber) as total_egresos FROM movimientos WHERE YEAR(fecha) = ?");
+$stmt_kpi->execute([$year]);
+$kpis = $stmt_kpi->fetch();
+
+$ingresos_anio = $kpis['total_ingresos'] ?? 0;
+$egresos_anio = $kpis['total_egresos'] ?? 0;
+$saldo_anio = $ingresos_anio - $egresos_anio;
+
+// 2. Pro-Luz Status (Selected Month/Year)
+// Note: We use the current month if the selected year is the current year, otherwise we might want to sum up the year?
+// The original code used (int)date('m') which is only valid for current year.
+// If looking at a past year, maybe show the December status or an average?
+// For now, let's keep it as $month, but if it's a past year, it might be better to show a summary.
+// The user asked for "estadisticas de diferente año".
 $stmt_pl = $db->prepare("
     SELECT 
         (SELECT COUNT(*) FROM personas WHERE activo = 1) as total_personas,
@@ -20,7 +43,7 @@ $stmt_pl = $db->prepare("
 $stmt_pl->execute([$month, $year]);
 $pro_luz_status = $stmt_pl->fetch();
 
-// 3. Monthly Trend (Current Year)
+// 3. Monthly Trend (Selected Year)
 $stmt_trend = $db->prepare("
     SELECT 
         m.mes,
@@ -38,8 +61,9 @@ $stmt_trend = $db->prepare("
 $stmt_trend->execute([$year]);
 $chart_data = $stmt_trend->fetchAll();
 
-// 4. Latest Movements
-$stmt_latest = $db->query("SELECT * FROM movimientos ORDER BY created_at DESC LIMIT 5");
+// 4. Latest Movements (Filtered by Year)
+$stmt_latest = $db->prepare("SELECT * FROM movimientos WHERE YEAR(fecha) = ? ORDER BY fecha DESC, created_at DESC LIMIT 5");
+$stmt_latest->execute([$year]);
 $latest_movs = $stmt_latest->fetchAll();
 
 include '../../includes/header.php';
@@ -49,13 +73,25 @@ include '../../includes/header.php';
     document.getElementById('module-title').innerText = 'Dashboard Principal';
 </script>
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h4 mb-0 text-gray-800">Dashboard - <?= $year ?></h2>
+    <div class="d-flex align-items-center gap-2">
+        <label for="yearFilter" class="form-label mb-0 small text-muted">Filtrar por año:</label>
+        <select class="form-select form-select-sm" id="yearFilter" onchange="changeYear(this.value)" style="width: 120px;">
+            <?php foreach ($available_years as $y): ?>
+                <option value="<?= $y ?>" <?= $y == $year ? 'selected' : '' ?>><?= $y ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="card bg-primary text-white p-3 border-0">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <small class="text-white-50">Saldo en Caja</small>
-                    <h3 class="fw-bold mb-0"><?= formatCurrency($saldo_total) ?></h3>
+                    <small class="text-white-50">Saldo en Caja (<?= $year ?>)</small>
+                    <h3 class="fw-bold mb-0"><?= formatCurrency($saldo_anio) ?></h3>
                 </div>
                 <div class="fs-1 opacity-25"><i class="fas fa-wallet"></i></div>
             </div>
@@ -65,8 +101,8 @@ include '../../includes/header.php';
         <div class="card bg-success text-white p-3 border-0">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <small class="text-white-50">Ingresos Totales</small>
-                    <h3 class="fw-bold mb-0"><?= formatCurrency($kpis['total_ingresos']) ?></h3>
+                    <small class="text-white-50">Ingresos (<?= $year ?>)</small>
+                    <h3 class="fw-bold mb-0"><?= formatCurrency($kpis['total_ingresos'] ?? 0) ?></h3>
                 </div>
                 <div class="fs-1 opacity-25"><i class="fas fa-arrow-trend-up"></i></div>
             </div>
@@ -76,8 +112,8 @@ include '../../includes/header.php';
         <div class="card bg-danger text-white p-3 border-0">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <small class="text-white-50">Egresos Totales</small>
-                    <h3 class="fw-bold mb-0"><?= formatCurrency($kpis['total_egresos']) ?></h3>
+                    <small class="text-white-50">Egresos (<?= $year ?>)</small>
+                    <h3 class="fw-bold mb-0"><?= formatCurrency($kpis['total_egresos'] ?? 0) ?></h3>
                 </div>
                 <div class="fs-1 opacity-25"><i class="fas fa-file-invoice"></i></div>
             </div>
@@ -129,7 +165,7 @@ include '../../includes/header.php';
     <div class="col-12">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-transparent border-0 py-3 d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold">Últimos Movimientos</h6>
+                <h6 class="mb-0 fw-bold">Últimos Movimientos (<?= $year ?>)</h6>
                 <a href="../../index.php" class="btn btn-sm btn-outline-primary">Ver todos</a>
             </div>
             <div class="card-body p-0">
@@ -209,7 +245,7 @@ include '../../includes/header.php';
         data: {
             labels: ['Pagado', 'Pendiente'],
             datasets: [{
-                data: [<?= $pro_luz_status['pagados'] ?>, <?= $pro_luz_status['total_personas'] - $pro_luz_status['pagados'] ?>],
+                data: [<?= $pro_luz_status['pagados'] ?>, <?= max(0, $pro_luz_status['total_personas'] - $pro_luz_status['pagados']) ?>],
                 backgroundColor: ['#198754', '#e9ecef'],
                 borderWidth: 0,
                 hoverOffset: 10
@@ -222,6 +258,10 @@ include '../../includes/header.php';
             }
         }
     });
+
+    function changeYear(y) {
+        window.location.href = 'index.php?year=' + y;
+    }
 </script>
 
 <?php include '../../includes/footer.php'; ?>

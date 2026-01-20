@@ -111,12 +111,11 @@ include '../../includes/header.php';
     
     <div class="col-md-3">
         <div class="card border-0 bg-primary text-white mb-4 text-center p-4">
-            <small class="opacity-75 text-uppercase fw-bold letter-spacing-1">Saldo Actual en Caja</small>
+            <small class="opacity-75 text-uppercase fw-bold letter-spacing-1">Saldo del Año (<?= $year ?>)</small>
             <?php 
-                $stmt_saldo = $db->query("SELECT saldo FROM movimientos ORDER BY fecha DESC, id DESC LIMIT 1");
-                $current_saldo = (float)$stmt_saldo->fetchColumn() ?: 0;
+                $yearly_balance = $grand_ingresos - $grand_egresos;
             ?>
-            <h1 class="mb-0 mt-2 fw-bold text-white"><?= formatCurrency($current_saldo) ?></h1>
+            <h1 class="mb-0 mt-2 fw-bold text-white"><?= formatCurrency($yearly_balance) ?></h1>
         </div>
         
         <div class="card border-0 p-4 mb-4">

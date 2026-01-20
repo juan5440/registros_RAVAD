@@ -99,7 +99,7 @@ include '../../includes/header.php';
                         <td class="text-end text-success"><?= formatCurrency($total_ingresos) ?></td>
                         <td class="text-end text-danger"><?= formatCurrency($total_egresos) ?></td>
                         <td class="text-end pe-3 bg-primary text-white">
-                            <?= !empty($movimientos) ? formatCurrency(end($movimientos)['saldo']) : '$0.00' ?>
+                            <?= formatCurrency($total_ingresos - $total_egresos) ?>
                         </td>
                     </tr>
                 </tfoot>
