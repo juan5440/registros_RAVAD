@@ -19,7 +19,7 @@ include '../../includes/header.php';
 <div class="card glass-card border-0 shadow-sm">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 datatable table-striped">
+            <table class="table table-hover align-middle mb-0 datatable table-striped" style="width:100%">
                 <thead style="background-color: var(--border-color); color: var(--text-main);">
                     <tr>
                         <th class="ps-4">Usuario</th>

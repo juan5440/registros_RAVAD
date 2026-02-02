@@ -27,10 +27,14 @@ $stmt = $db->prepare("
 $stmt->execute([$month, $year]);
 $people_status = $stmt->fetchAll();
 
-// Total to sync (not yet processed)
+// Total to sync (not yet processed) - Specific to current view (for UI feedback)
 $stmt_unsynced = $db->prepare("SELECT SUM(monto) FROM pro_luz WHERE mes_correspondiente = ? AND anio_correspondiente = ? AND procesado = 0");
 $stmt_unsynced->execute([$month, $year]);
 $total_unsynced = (float)$stmt_unsynced->fetchColumn();
+
+// Total to sync (Global - All months/years)
+$stmt_global = $db->query("SELECT SUM(monto) FROM pro_luz WHERE procesado = 0");
+$global_unsynced = (float)$stmt_global->fetchColumn();
 
 include '../../includes/header.php';
 ?>
@@ -70,12 +74,12 @@ include '../../includes/header.php';
                 <i class="fas fa-users-cog me-2"></i> Administrar Personas
             </a>
             
-            <?php if ($total_unsynced > 0): ?>
+            <?php if ($global_unsynced > 0): ?>
                 <form action="sync.php" method="POST" class="d-inline">
                     <input type="hidden" name="month" value="<?= $month ?>">
                     <input type="hidden" name="year" value="<?= $year ?>">
-                    <button type="submit" class="btn btn-sm btn-warning" onclick="return confirmAndSubmit(event, '¿Sincronizar Datos?', 'Se registrará el total de <?= formatCurrency($total_unsynced) ?> en el Registro General como aporte de Pro-Luz.')">
-                        <i class="fas fa-sync me-2"></i> Sincronizar
+                    <button type="submit" class="btn btn-sm btn-warning" onclick="return confirmAndSubmit(event, '¿Sincronizar Todas las Aportaciones?', 'Se registrará un total de <?= formatCurrency($global_unsynced) ?> en el Registro General, desglosado automáticamente por fecha de pago. ¿Deseas continuar?')">
+                        <i class="fas fa-sync me-2"></i> Sincronizar Global (<?= formatCurrency($global_unsynced) ?>)
                     </button>
                 </form>
             <?php endif; ?>
@@ -93,7 +97,7 @@ include '../../includes/header.php';
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 datatable table-striped">
+            <table class="table table-hover align-middle mb-0 datatable table-striped" style="width:100%">
                 <thead class="table-light">
                     <tr>
                         <th class="text-center">Nro.</th>

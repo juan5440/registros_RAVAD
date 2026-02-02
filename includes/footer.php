@@ -29,7 +29,6 @@ $root = $is_subfolder ? '../../' : './';
                     url: '<?= $root ?>public/vendor/js/es-ES.json' // I'll create this or use a local object
                 },
                 pageLength: 10,
-                responsive: true,
                 order: [] // Disable initial sort to keep SQL order
             });
         }

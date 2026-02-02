@@ -64,7 +64,7 @@ include 'includes/header.php';
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 datatable">
+            <table class="table table-hover align-middle mb-0 datatable" style="width:100%">
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">Fecha</th>
@@ -77,11 +77,7 @@ include 'includes/header.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($movimientos)): ?>
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">No hay registros para este período.</td>
-                        </tr>
-                    <?php else: ?>
+                    <?php if (!empty($movimientos)): ?>
                         <?php foreach ($movimientos as $row): ?>
                             <tr>
                                 <td class="ps-4"><?= date('d/m/Y', strtotime($row['fecha'])) ?></td>
